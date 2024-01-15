@@ -169,7 +169,7 @@ function ToolbarPlugin() {
 
 const editorConfig = {
   namespace: "MyEditor",
-  onError(error) {
+  onError(error: Error) {
     throw error;
   },
   nodes: [
@@ -199,6 +199,7 @@ export function TextEditor() {
                 Play around with the editor...
               </div>
             }
+            // @ts-ignore
             ErrorBoundary={null}
           />
           <AutoFocusPlugin />
