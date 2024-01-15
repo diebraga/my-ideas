@@ -1,5 +1,11 @@
+import ShareIdeaForm from "@/components/ShareIdeaForm/ShareIdeaForm";
+
 const Home = () => {
-  return <main>Hello World</main>;
+  return (
+    <main>
+      <ShareIdeaForm />
+    </main>
+  );
 };
 
 export default Home;
