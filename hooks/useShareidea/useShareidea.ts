@@ -1,5 +1,4 @@
 "use client";
-import { getMetamask } from "@/utils/createEthContract/createEthContract";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
