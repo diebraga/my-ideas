@@ -1,4 +1,5 @@
 "use client";
+import { getMetamask } from "@/utils/getMetamask/getMetamask";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -22,15 +23,45 @@ export const useShareidea = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isLoading },
+    formState: { errors, isLoading, isSubmitting },
   } = useForm<FormData>();
   const [currAccount, setCurrAccount] = useState("");
   const [error, setError] = useState<ErrorMessage>(ErrorMessage.default);
-  console.log({ currAccount });
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    reset({ idea: "", title: "" });
+  const onSubmit = async (data: FormData) => {
+    try {
+      if (!window.ethereum) {
+        setError(ErrorMessage.MetamaskNotInstalled);
+        return;
+      }
+
+      const { idea, title } = data;
+      const { signer } = await getMetamask();
+
+      const response = await fetch("/api/createIdea", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          idea,
+          signer,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit idea");
+      }
+
+      reset({ idea: "", title: "" });
+
+      const responseData = await response.json();
+      console.log("API response:", responseData);
+    } catch (error) {
+      setError(ErrorMessage.GeneralError);
+      console.error("Transaction failed:", error);
+    }
   };
 
   const checkWalletConnection = async () => {
@@ -75,7 +106,7 @@ export const useShareidea = () => {
     error,
     currAccount,
     onSubmit,
-    isLoading,
+    isLoading: isLoading || isSubmitting,
     resetErrMessage,
   };
 };
