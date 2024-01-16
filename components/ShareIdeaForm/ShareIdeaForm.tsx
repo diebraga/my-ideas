@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Alert, AlertType } from "../Alert/Alert";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
+import { MdNetworkWifi3Bar } from "react-icons/md";
 
 type FormData = {
   title: string;
@@ -18,6 +19,7 @@ export enum ErrorMessage {
   PleaseAcceptMetamaskRequest = "Please accept request on metamask",
   AccessToMetamaskWasDenied = "Access to metamask was denied",
   GeneralError = "An unespected error has ocurred",
+  NoAccoutFound = "No account found",
 }
 
 const ShareIdeaForm: React.FC = () => {
@@ -54,7 +56,9 @@ const ShareIdeaForm: React.FC = () => {
       setCurrNetwork(network.name);
       if (accounts) {
         setCurrAccount(accounts[0]);
+        setError(ErrorMessage.default);
       } else {
+        setError(ErrorMessage.NoAccoutFound);
         console.log("No accounts found");
       }
     } catch (error: any) {
@@ -118,6 +122,16 @@ const ShareIdeaForm: React.FC = () => {
           icon={<AiOutlineExclamationCircle />}
         />
       )}
+      {currNetwork && (
+        <Alert
+          type={AlertType.Info}
+          isVisible
+          content={`Network: ${currNetwork}`}
+          onClose={() => setCurrNetwork("")}
+          icon={<MdNetworkWifi3Bar />}
+        />
+      )}
+
       {/* <Checkbox
         label="Idea is private"
         crossOrigin={undefined}
