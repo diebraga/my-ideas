@@ -1,5 +1,3 @@
-// import { ContractTransaction, Contract } from "ethers";
-// import { contractAbi, contractAddress } from "./constants";
 import { BrowserProvider, Eip1193Provider } from "ethers";
 
 declare global {
@@ -8,14 +6,14 @@ declare global {
   }
 }
 
-export const createEthereumContract = async () => {
+export const getMetamask = async () => {
   const provider = new BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
-  //   const transactionsContract = new Contract(
-  //     contractAddress,
-  //     contractAbi,
-  //     signer
-  //   );
+  // const transactionsContract = new Contract(
+  //   contractAddress,
+  //   contractAbi,
+  //   signer
+  // );
 
   return { provider, signer };
 };

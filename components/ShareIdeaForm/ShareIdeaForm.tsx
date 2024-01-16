@@ -1,80 +1,20 @@
 "use client";
-import { createEthereumContract } from "@/utils/createEthContract/createEthContract";
 import { Button, Input, Textarea } from "@material-tailwind/react";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import React from "react";
 import { Alert, AlertType } from "../Alert/Alert";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
-import { MdNetworkWifi3Bar } from "react-icons/md";
-
-type FormData = {
-  title: string;
-  idea: string;
-  // isPrivate: boolean;
-};
-
-export enum ErrorMessage {
-  default = "",
-  MetamaskNotInstalled = "Please install metamask",
-  PleaseAcceptMetamaskRequest = "Please accept request on metamask",
-  AccessToMetamaskWasDenied = "Access to metamask was denied",
-  GeneralError = "An unespected error has ocurred",
-  NoAccoutFound = "No account found",
-}
+import { useShareidea } from "@/hooks/useShareidea/useShareidea";
 
 const ShareIdeaForm: React.FC = () => {
   const {
-    register,
+    error,
+    errors,
     handleSubmit,
-    reset,
-    formState: { errors, isLoading },
-  } = useForm<FormData>();
-  const [currAccount, setCurrAccount] = useState("");
-  const [currNetwork, setCurrNetwork] = useState("");
-  const [error, setError] = useState<ErrorMessage>(ErrorMessage.default);
-  console.log({ currNetwork, currAccount });
-
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    reset({ idea: "", title: "" });
-  };
-
-  const checkWalletConnection = async () => {
-    try {
-      if (!window.ethereum) {
-        setError(ErrorMessage.MetamaskNotInstalled);
-        return;
-      }
-
-      const accounts = await window.ethereum.request({
-        method: "eth_accounts",
-      });
-
-      const { provider } = await createEthereumContract();
-      const network = await provider.getNetwork();
-
-      setCurrNetwork(network.name);
-      if (accounts) {
-        setCurrAccount(accounts[0]);
-        setError(ErrorMessage.default);
-      } else {
-        setError(ErrorMessage.NoAccoutFound);
-        console.log("No accounts found");
-      }
-    } catch (error: any) {
-      if (error.message.includes("could not coalesce error")) {
-        setError(ErrorMessage.PleaseAcceptMetamaskRequest);
-      } else if (error.message.includes("user rejected action")) {
-        setError(ErrorMessage.AccessToMetamaskWasDenied);
-      } else {
-        setError(ErrorMessage.GeneralError);
-      }
-    }
-  };
-
-  useEffect(() => {
-    checkWalletConnection();
-  }, []);
+    isLoading,
+    onSubmit,
+    register,
+    resetErrMessage,
+  } = useShareidea();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mx-2 flex flex-col ">
@@ -118,20 +58,10 @@ const ShareIdeaForm: React.FC = () => {
           type={AlertType.Danger}
           isVisible
           content={error}
-          onClose={() => setError(ErrorMessage.default)}
+          onClose={resetErrMessage}
           icon={<AiOutlineExclamationCircle />}
         />
       )}
-      {currNetwork && (
-        <Alert
-          type={AlertType.Info}
-          isVisible
-          content={`Network: ${currNetwork}`}
-          onClose={() => setCurrNetwork("")}
-          icon={<MdNetworkWifi3Bar />}
-        />
-      )}
-
       {/* <Checkbox
         label="Idea is private"
         crossOrigin={undefined}
