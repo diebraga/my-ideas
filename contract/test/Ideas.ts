@@ -18,7 +18,7 @@ describe("Ideas", function () {
       const description = "Idea Description";
       const name = "Diego Braga";
 
-      await ideas.addIdea(title, description, name);
+      await ideas.addIdea(title, description, name, Date.now());
 
       const retrievedIdeas = await ideas.getIdeas(0, 1, owner.address);
       expect(retrievedIdeas[0].title).to.equal(title);
@@ -33,11 +33,11 @@ describe("Ideas", function () {
       const title1 = ethers.encodeBytes32String("Idea 1");
       const description1 = "First Idea Description";
       const name = "Diego Braga";
-      await ideas.addIdea(title1, description1, name);
+      await ideas.addIdea(title1, description1, name, Date.now());
 
       const title2 = ethers.encodeBytes32String("Idea 2");
       const description2 = "Second Idea Description";
-      await ideas.addIdea(title2, description2, name);
+      await ideas.addIdea(title2, description2, name, Date.now());
 
       // Retrieve ideas added by the owner address
       const retrievedIdeas = await ideas.getIdeas(0, 10, owner.address);
@@ -56,7 +56,7 @@ describe("Ideas", function () {
       for (let i = 0; i < 10; i++) {
         const title = ethers.encodeBytes32String(`Idea ${i}`);
         const description = `Description ${i}`;
-        await ideas.addIdea(title, description, name);
+        await ideas.addIdea(title, description, name, Date.now());
       }
 
       const retrievedIdeas = await ideas.getIdeas(2, 5, owner.address);
@@ -76,7 +76,7 @@ describe("Ideas", function () {
       const title = ethers.encodeBytes32String("Sample Idea");
       const description = "Sample Description";
       const name = "Diego Braga";
-      await ideas.addIdea(title, description, name);
+      await ideas.addIdea(title, description, name, Date.now());
 
       // Retrieve the name associated with the owner's address
       const retrievedName = await ideas.getName(owner.address);

@@ -6,6 +6,7 @@ contract Ideas {
         bytes32 title; // Use bytes32 for shorter titles, or string for longer text
         string description;
         address from; // Address of the idea submitter
+        uint timestamp;
     }
 
     Idea[] private ideas;
@@ -17,14 +18,15 @@ contract Ideas {
     function addIdea(
         bytes32 _title,
         string memory _description,
-        string memory _name
+        string memory _name,
+        uint _timestamp
     ) public {
         require(bytes(_name).length <= 32, "Name too long");
         // Associate the name with the address if it's the first time
         if (bytes(nameOfAddress[msg.sender]).length == 0) {
             nameOfAddress[msg.sender] = _name;
         }
-        ideas.push(Idea(_title, _description, msg.sender));
+        ideas.push(Idea(_title, _description, msg.sender, _timestamp));
     }
 
     // Function to get a list of ideas filtered by an address

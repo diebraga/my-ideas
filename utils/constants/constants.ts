@@ -1,5 +1,4 @@
 import Ideas from "./Ideas.json";
 
 export const contractAbi = Ideas.abi;
-export const contractAddress =
-  "0xa53724790A444F2b082dC7180B20692344A5AB5C";
+export const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
