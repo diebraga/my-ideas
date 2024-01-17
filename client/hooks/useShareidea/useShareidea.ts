@@ -29,9 +29,7 @@ export const useShareidea = () => {
   } = useForm<FormData>();
   const [currAccount, setCurrAccount] = useState("");
   const [error, setError] = useState<ErrorMessage>(ErrorMessage.default);
-  const [txHash, setTxHash] = useState(
-    "0xea7c67d4a9ec51592b2e08323251139c8be47bda1107ae17a8245aa778971b20"
-  );
+  const [txHash, setTxHash] = useState("");
 
   const onSubmit = async (data: FormData) => {
     try {
