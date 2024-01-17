@@ -11,21 +11,12 @@ contract Ideas {
 
     Idea[] private ideas;
 
-    // Mapping to associate an address with a name
-    mapping(address => string) private nameOfAddress;
-
     // Function to add a new idea
     function addIdea(
         bytes32 _title,
         string memory _description,
-        string memory _name,
         uint _timestamp
     ) public {
-        require(bytes(_name).length <= 32, "Name too long");
-        // Associate the name with the address if it's the first time
-        if (bytes(nameOfAddress[msg.sender]).length == 0) {
-            nameOfAddress[msg.sender] = _name;
-        }
         ideas.push(Idea(_title, _description, msg.sender, _timestamp));
     }
 
@@ -74,10 +65,5 @@ contract Ideas {
             ideasSlice[i - startIndex] = _ideas[i];
         }
         return ideasSlice;
-    }
-
-    // Function to get the name associated with an address
-    function getName(address _address) public view returns (string memory) {
-        return nameOfAddress[_address];
     }
 }

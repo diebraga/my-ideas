@@ -16,9 +16,8 @@ describe("Ideas", function () {
 
       const title = ethers.encodeBytes32String("Idea Title");
       const description = "Idea Description";
-      const name = "Diego Braga";
 
-      await ideas.addIdea(title, description, name, Date.now());
+      await ideas.addIdea(title, description, Date.now());
 
       const retrievedIdeas = await ideas.getIdeas(0, 1, owner.address);
       expect(retrievedIdeas[0].title).to.equal(title);
@@ -32,12 +31,12 @@ describe("Ideas", function () {
       // Add two ideas
       const title1 = ethers.encodeBytes32String("Idea 1");
       const description1 = "First Idea Description";
-      const name = "Diego Braga";
-      await ideas.addIdea(title1, description1, name, Date.now());
+
+      await ideas.addIdea(title1, description1, Date.now());
 
       const title2 = ethers.encodeBytes32String("Idea 2");
       const description2 = "Second Idea Description";
-      await ideas.addIdea(title2, description2, name, Date.now());
+      await ideas.addIdea(title2, description2, Date.now());
 
       // Retrieve ideas added by the owner address
       const retrievedIdeas = await ideas.getIdeas(0, 10, owner.address);
@@ -51,12 +50,11 @@ describe("Ideas", function () {
     it("Should handle pagination correctly", async function () {
       const { ideas } = await loadFixture(deployIdeasFixture);
       const [owner] = await ethers.getSigners();
-      const name = "Diego Braga";
 
       for (let i = 0; i < 10; i++) {
         const title = ethers.encodeBytes32String(`Idea ${i}`);
         const description = `Description ${i}`;
-        await ideas.addIdea(title, description, name, Date.now());
+        await ideas.addIdea(title, description, Date.now());
       }
 
       const retrievedIdeas = await ideas.getIdeas(2, 5, owner.address);
@@ -66,23 +64,6 @@ describe("Ideas", function () {
           ethers.encodeBytes32String(`Idea ${i}`)
         );
       }
-    });
-
-    it("Should return the correct name for an address", async function () {
-      const { ideas } = await loadFixture(deployIdeasFixture);
-      const [owner] = await ethers.getSigners();
-
-      // Add an idea to ensure the name is set
-      const title = ethers.encodeBytes32String("Sample Idea");
-      const description = "Sample Description";
-      const name = "Diego Braga";
-      await ideas.addIdea(title, description, name, Date.now());
-
-      // Retrieve the name associated with the owner's address
-      const retrievedName = await ideas.getName(owner.address);
-
-      // Assert that the retrieved name matches the expected name
-      expect(retrievedName).to.equal(name);
     });
   });
 });
