@@ -27,8 +27,8 @@ const ShareIdeaForm: React.FC = () => {
       <h1 className="text-xl font-semibold mb-3 md:text-2xl">
         Share your idea ✨
       </h1>
-      <Input
-        crossOrigin={undefined}
+      <input
+        placeholder="Title"
         {...register("title", {
           required: "Title is required",
           minLength: {
@@ -36,14 +36,14 @@ const ShareIdeaForm: React.FC = () => {
             message: "Title must be at least 3 characters long",
           },
         })}
-        label="Title"
-        error={!!errors.title}
+        className={`peer h-full w-full rounded-md border border-gray-300 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50`}
       />
       <div className="text-red-500 text-sm my-2">
         {errors.title && errors.title.message}
       </div>
-      <Textarea
-        label="Share your idea..."
+      <textarea
+        id="idea"
+        placeholder="Share what's your idea..."
         {...register("idea", {
           required: "Idea is required",
           minLength: {
@@ -51,10 +51,10 @@ const ShareIdeaForm: React.FC = () => {
             message: "Your idea must be at least 3 characters long",
           },
         })}
-        error={!!errors.idea}
-        size="lg"
+        className={`peer h-full w-full rounded-md border border-gray-300 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50`}
+        rows={4}
       />
-      <div className="text-red-500 text-sm my-1">
+      <div className="text-red-500 text-sm my-2">
         {errors.idea && errors.idea.message}
       </div>
 

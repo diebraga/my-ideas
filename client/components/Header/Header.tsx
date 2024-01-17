@@ -2,41 +2,35 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { FaEthereum } from "react-icons/fa";
+import { Sidebar } from "../Sidebar/Sidebar";
+import Logo from "../Logo/Logo";
+import { navigation } from "@/utils/constants/navigation";
 
 const Header: React.FC = () => {
   const pathname = usePathname();
-  const isMyIAtive = pathname === "/" ? "font-semibold" : "";
-  const isShare = pathname === "/share" ? "font-semibold" : "";
-  const isAbout = pathname === "/about" ? "font-semibold" : "";
 
   return (
-    <header className="w-full bg-transparent border-b border-gray-300 py-6 sticky top-0 bg-white">
+    <header className="w-full border-b border-gray-300 py-6 sticky top-0 bg-white">
       <div className="flex justify-center">
         <div className="flex items-center w-full max-w-2xl px-6 justify-between">
-          <Link href="/" className="flex items-center cursor-pointer">
-            <FaEthereum className="text-lg" size={39} />
-            <h1 className="text-xl font-semibold">i DApp</h1>
-          </Link>
-          <nav className="flex items-center">
-            <Link
-              href="/"
-              className={`text-md md:text-lg mx-4 hover:text-blue-600 transition-colors duration-200 ease-in-out ${isMyIAtive}`}
-            >
-              My Ideas
-            </Link>
-            <Link
-              href="/share"
-              className={`text-md md:text-lg mx-4 hover:text-blue-600 transition-colors duration-200 ease-in-out ${isShare}`}
-            >
-              Share
-            </Link>
-            <Link
-              href="/about"
-              className={`text-md md:text-lg mx-4 hover:text-blue-600 transition-colors duration-200 ease-in-out ${isAbout}`}
-            >
-              About
-            </Link>
+          <Logo />
+          <nav>
+            <Sidebar />
+          </nav>
+          <nav className="items-center hidden md:flex">
+            {navigation.map((item) => {
+              const isActive = pathname === item.href ? "font-semibold" : "";
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`text-md md:text-lg mx-4 hover:font-semibold transition-colors duration-200 ease-in-out ${isActive}`}
+                >
+                  {item.title}
+                </Link>
+              );
+            })}
           </nav>
         </div>
       </div>
