@@ -1,5 +1,11 @@
+import MyIdeas from "@/components/MyIdeas/MyIdeas";
+
 const Home = () => {
-  return <main>My Ideas</main>;
+  return (
+    <main>
+      <MyIdeas />
+    </main>
+  );
 };
 
 export default Home;

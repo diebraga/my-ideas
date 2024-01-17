@@ -11,13 +11,13 @@ const Header: React.FC = () => {
   const isAbout = pathname === "/about" ? "font-semibold" : "";
 
   return (
-    <header className="w-full bg-transparent border-b border-gray-300 py-6">
+    <header className="w-full bg-transparent border-b border-gray-300 py-6 sticky top-0 bg-white">
       <div className="flex justify-center">
         <div className="flex items-center w-full max-w-2xl px-6 justify-between">
-          <div className="flex items-center">
-            <FaEthereum className="text-lg mr-3" size={39} />
+          <Link href="/" className="flex items-center cursor-pointer">
+            <FaEthereum className="text-lg" size={39} />
             <h1 className="text-xl font-semibold">i DApp</h1>
-          </div>
+          </Link>
           <nav className="flex items-center">
             <Link
               href="/"

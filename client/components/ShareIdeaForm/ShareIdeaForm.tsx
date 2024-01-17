@@ -22,7 +22,7 @@ const ShareIdeaForm: React.FC = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="mx-2 flex flex-col -mt-60"
+      className="mx-2 flex flex-col mt-32"
     >
       <h1 className="text-xl font-semibold mb-3 md:text-2xl">
         Share your idea ✨
