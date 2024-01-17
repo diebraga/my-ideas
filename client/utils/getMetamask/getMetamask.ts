@@ -9,11 +9,6 @@ declare global {
 export const getMetamask = async () => {
   const provider = new BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
-  // const transactionsContract = new Contract(
-  //   contractAddress,
-  //   contractAbi,
-  //   signer
-  // );
 
   return { provider, signer };
 };
