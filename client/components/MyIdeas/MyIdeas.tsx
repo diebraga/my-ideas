@@ -4,16 +4,11 @@ import { truncateString } from "@/utils/truncateString/truncateString";
 import Link from "next/link";
 import React from "react";
 
-const mockIdeas = Array.from({ length: 50 }, (_, i) => ({
-  title: `Idea ${i + 1}`,
-  content: `Content for idea ${i + 1} - ${"Content for idea".repeat(90)}`,
-}));
-
 const MyIdeas: React.FC = () => {
-  useFetchidea();
+  const { ideas } = useFetchidea();
   return (
     <div className="flex flex-col mt-16 p-3 cursor-pointer">
-      {mockIdeas.map((idea, index) => (
+      {ideas.map((idea, index) => (
         <Link
           key={index}
           href={`/${index}`}
