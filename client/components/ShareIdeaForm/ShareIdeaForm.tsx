@@ -4,6 +4,7 @@ import React from "react";
 import { Alert, AlertType } from "../Alert/Alert";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { useShareidea } from "@/hooks/useShareidea/useShareidea";
+import { CopyToClipboardButton } from "../CopyToClipboardButton/CopyToClipboardButton";
 
 const ShareIdeaForm: React.FC = () => {
   const {
@@ -14,6 +15,8 @@ const ShareIdeaForm: React.FC = () => {
     onSubmit,
     register,
     resetErrMessage,
+    txHash,
+    resetTxHash,
   } = useShareidea();
 
   return (
@@ -60,6 +63,16 @@ const ShareIdeaForm: React.FC = () => {
           content={error}
           onClose={resetErrMessage}
           icon={<AiOutlineExclamationCircle />}
+        />
+      )}
+      {txHash && (
+        <Alert
+          type={AlertType.Success}
+          isVisible
+          content={txHash}
+          onClose={resetTxHash}
+          icon={<CopyToClipboardButton content={txHash} />}
+          title="Success"
         />
       )}
       {/* <Checkbox

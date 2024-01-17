@@ -1,5 +1,7 @@
 "use client";
+import { contractAbi, contractAddress } from "@/utils/constants/constants";
 import { getMetamask } from "@/utils/getMetamask/getMetamask";
+import { Contract, ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -27,6 +29,9 @@ export const useShareidea = () => {
   } = useForm<FormData>();
   const [currAccount, setCurrAccount] = useState("");
   const [error, setError] = useState<ErrorMessage>(ErrorMessage.default);
+  const [txHash, setTxHash] = useState(
+    "0xea7c67d4a9ec51592b2e08323251139c8be47bda1107ae17a8245aa778971b20"
+  );
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -38,29 +43,25 @@ export const useShareidea = () => {
       const { idea, title } = data;
       const { signer } = await getMetamask();
 
-      const response = await fetch("/api/createIdea", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          idea,
-          signer,
-        }),
-      });
+      const contract = new Contract(contractAddress, contractAbi, signer);
+      const formattedTitle = ethers.encodeBytes32String(title);
 
-      if (!response.ok) {
-        throw new Error("Failed to submit idea");
-      }
+      const transactionHash = await contract.addIdea(
+        formattedTitle,
+        idea,
+        Date.now()
+      );
+      await transactionHash.wait();
 
       reset({ idea: "", title: "" });
-
-      const responseData = await response.json();
-      console.log("API response:", responseData);
-    } catch (error) {
-      setError(ErrorMessage.GeneralError);
-      console.error("Transaction failed:", error);
+      setTxHash(transactionHash.hash);
+    } catch (error: any) {
+      if (error.message.includes("user rejected action")) {
+        setError(ErrorMessage.AccessToMetamaskWasDenied);
+      } else {
+        setError(ErrorMessage.GeneralError);
+        console.error("Transaction failed:", error);
+      }
     }
   };
 
@@ -95,6 +96,8 @@ export const useShareidea = () => {
 
   const resetErrMessage = () => setError(ErrorMessage.default);
 
+  const resetTxHash = () => setTxHash("");
+
   useEffect(() => {
     checkWalletConnection();
   }, []);
@@ -108,5 +111,7 @@ export const useShareidea = () => {
     onSubmit,
     isLoading: isLoading || isSubmitting,
     resetErrMessage,
+    txHash,
+    resetTxHash,
   };
 };

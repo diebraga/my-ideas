@@ -1,3 +1,4 @@
+import { truncateString } from "@/utils/truncateString/truncateString";
 import { FC, ReactNode } from "react";
 
 type AlertProps = {
@@ -6,6 +7,7 @@ type AlertProps = {
   onClose?: () => void;
   isVisible: boolean;
   icon?: ReactNode;
+  title?: string;
 };
 
 export enum AlertType {
@@ -21,6 +23,7 @@ export const Alert: FC<AlertProps> = ({
   onClose,
   isVisible,
   icon,
+  title,
 }) => {
   const alertColors: { [key in AlertType]: string } = {
     [AlertType.Success]: "bg-green-100 border border-green-400 text-green-700",
@@ -41,7 +44,12 @@ export const Alert: FC<AlertProps> = ({
         >
           <div className="flex items-center gap-2">
             {icon}
-            <span className="text-xs">{content}</span>
+            <div>
+              <p className="text-xs truncate w-[200px] font-semibold">{title}</p>
+              {content && (
+                <span className="text-xs">{truncateString(content, 30)}</span>
+              )}
+            </div>
           </div>
           {onClose && (
             <span onClick={onClose}>
