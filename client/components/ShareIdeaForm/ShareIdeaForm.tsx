@@ -20,8 +20,13 @@ const ShareIdeaForm: React.FC = () => {
   } = useShareidea();
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mx-2 flex flex-col ">
-      <h1 className="text-xl font-semibold mb-2">Share your idea ✨</h1>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="mx-2 flex flex-col -mt-60"
+    >
+      <h1 className="text-xl font-semibold mb-3 md:text-2xl">
+        Share your idea ✨
+      </h1>
       <Input
         crossOrigin={undefined}
         {...register("title", {
