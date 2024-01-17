@@ -1,3 +1,5 @@
+"use client";
+import { useFetchidea } from "@/hooks/useFetchIdea/useFetchIdea";
 import { truncateString } from "@/utils/truncateString/truncateString";
 import Link from "next/link";
 import React from "react";
@@ -8,6 +10,7 @@ const mockIdeas = Array.from({ length: 50 }, (_, i) => ({
 }));
 
 const MyIdeas: React.FC = () => {
+  useFetchidea();
   return (
     <div className="flex flex-col mt-16 p-3 cursor-pointer">
       {mockIdeas.map((idea, index) => (

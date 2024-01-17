@@ -1,5 +1,5 @@
 "use client";
-import { Button, Input, Textarea } from "@material-tailwind/react";
+import { Button } from "@material-tailwind/react";
 import React from "react";
 import { Alert, AlertType } from "../Alert/Alert";
 import { AiOutlineExclamationCircle } from "react-icons/ai";

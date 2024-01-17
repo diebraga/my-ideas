@@ -5,44 +5,34 @@ import {
   contractAddress,
 } from "@/utils/constants/constants";
 import { getMetamask } from "@/utils/getMetamask/getMetamask";
-import { Contract, ethers } from "ethers";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Contract } from "ethers";
+import { useCallback, useEffect, useState } from "react";
 
-type FormData = {
-  title: string;
-  idea: string;
-  // isPrivate: boolean;
-};
-
-export const useShareidea = () => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isLoading, isSubmitting },
-  } = useForm<FormData>();
+export const useFetchidea = () => {
   const [currAccount, setCurrAccount] = useState("");
   const [error, setError] = useState<ErrorMessage>(ErrorMessage.default);
-  const [txHash, setTxHash] = useState("");
 
-  const onSubmit = async (data: FormData) => {
+  const onFetch = async (address: string) => {
     try {
       if (!window.ethereum) {
         setError(ErrorMessage.MetamaskNotInstalled);
         return;
       }
 
-      const { idea, title } = data;
       const { signer } = await getMetamask();
 
       const contract = new Contract(contractAddress, contractAbi, signer);
 
-      const transactionHash = await contract.addIdea(title, idea, Date.now());
-      await transactionHash.wait();
+      const ideas = await contract.getIdeasByAddress(address, 1, 1);
 
-      reset({ idea: "", title: "" });
-      setTxHash(transactionHash.hash);
+      const formattedIdeas = ideas.map((transaction: never) => {
+        return {
+          title: transaction[0],
+          content: transaction[1],
+          timestamp: new Date(parseInt(transaction[2])).toLocaleString(),
+        };
+      });
+      console.log(formattedIdeas);
     } catch (error: any) {
       if (error.message.includes("user rejected action")) {
         setError(ErrorMessage.AccessToMetamaskWasDenied);
@@ -53,7 +43,7 @@ export const useShareidea = () => {
     }
   };
 
-  const checkWalletConnection = async () => {
+  const checkWalletConnection = useCallback(async () => {
     try {
       if (!window.ethereum) {
         setError(ErrorMessage.MetamaskNotInstalled);
@@ -66,6 +56,8 @@ export const useShareidea = () => {
 
       if (accounts) {
         setCurrAccount(accounts[0]);
+        onFetch(accounts[0]);
+
         setError(ErrorMessage.default);
       } else {
         setError(ErrorMessage.NoAccoutFound);
@@ -80,26 +72,17 @@ export const useShareidea = () => {
         setError(ErrorMessage.GeneralError);
       }
     }
-  };
+  }, []);
 
   const resetErrMessage = () => setError(ErrorMessage.default);
 
-  const resetTxHash = () => setTxHash("");
-
   useEffect(() => {
     checkWalletConnection();
-  }, []);
+  }, [checkWalletConnection]);
 
   return {
-    register,
-    handleSubmit,
-    errors,
     error,
     currAccount,
-    onSubmit,
-    isLoading: isLoading || isSubmitting,
     resetErrMessage,
-    txHash,
-    resetTxHash,
   };
 };
