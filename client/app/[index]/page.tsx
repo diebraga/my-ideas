@@ -1,5 +1,11 @@
+import MyIdea from "@/components/MyIdea/MyIdea";
+
 const IdeaPage = () => {
-  return <main>IdeaPage</main>;
+  return (
+    <main>
+      <MyIdea />
+    </main>
+  );
 };
 
 export default IdeaPage;
