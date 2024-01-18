@@ -11,6 +11,7 @@ const MyIdea = () => {
   return (
     <div className="flex flex-col mt-3 p-3 justify-between">
       <div>
+        {"<"}
         <h1 className="text-2xl md:text-3xl mt-3">{idea?.title}</h1>
         <p>{idea?.content}</p>
       </div>
