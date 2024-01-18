@@ -6,6 +6,7 @@ import React from "react";
 
 const MyIdeas: React.FC = () => {
   const { ideas } = useFetchidea();
+
   return (
     <div className="flex flex-col mt-16 p-3 cursor-pointer">
       {ideas.map(({ title, content }, index) => (
