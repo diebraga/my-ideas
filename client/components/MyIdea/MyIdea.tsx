@@ -1,10 +1,10 @@
 "use client";
 
-import useIdeaStore from "@/hooks/useIdeaStore/useIdeaStore";
+import { useFetchidea } from "@/hooks/useFetchIdea/useFetchIdea";
 
 const MyIdea = () => {
-  const { idea } = useIdeaStore((state) => state);
-  console.log(idea);
+  const { ideas } = useFetchidea();
+  console.log(ideas);
 
   return (
     <div className="flex flex-col mt-8 p-3 justify-between">
