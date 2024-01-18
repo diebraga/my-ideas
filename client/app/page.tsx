@@ -1,9 +1,9 @@
-import MyIdeas from "@/components/MyIdeas/MyIdeas";
+import ShareIdeaForm from "@/components/ShareIdeaForm/ShareIdeaForm";
 
 const Home = () => {
   return (
     <main>
-      <MyIdeas />
+      <ShareIdeaForm />
     </main>
   );
 };
