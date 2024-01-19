@@ -23,6 +23,9 @@ export const useFetchidea = () => {
   const [startIndex, setStartIndex] = useState(0);
   const [maxPages] = useState(1);
 
+  const [isLoading, setIsLoading]=useState(false)
+console.log(isLoading);
+
   const onloadMore = () => {
     setStartIndex((p) => p + maxPages);
   };
@@ -38,6 +41,7 @@ export const useFetchidea = () => {
       const contract = new Contract(contractAddress, contractAbi, signer);
 
       if (startIndex !== undefined && maxPages !== undefined) {
+        setIsLoading(true)
         const ideas = await contract.getIdeasByAddress(
           address,
           startIndex,
@@ -58,6 +62,8 @@ export const useFetchidea = () => {
             (newIdea: any) => !prevIdeas.some((idea) => idea.id === newIdea.id)
           ),
         ]);
+        setIsLoading(false)
+
       }
     } catch (error: any) {
       if (error.message.includes("user rejected action")) {
@@ -112,5 +118,6 @@ export const useFetchidea = () => {
     resetErrMessage,
     ideas,
     onloadMore,
+    isLoading
   };
 };
