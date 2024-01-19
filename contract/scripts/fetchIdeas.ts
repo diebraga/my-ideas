@@ -16,7 +16,7 @@ async function main() {
   try {
     const ideas = await contract.getIdeasByAddress(
       "0x58003b568dc2015Fb5B979112C5534e044dC71F6",
-      1,
+      0,
       1
     );
     console.log("Ideas:", ideas);

@@ -6,23 +6,26 @@ import {
 } from "@/utils/constants/constants";
 import { getMetamask } from "@/utils/getMetamask/getMetamask";
 import { Contract } from "ethers";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type IdeaType = {
+  id: string;
   title: string;
   content: string;
   timestamp: string;
 };
-
-const startIndex = 0;
-// if biger than the array size it defaults to array size
-const maxPages = 1;
 
 export const useFetchidea = () => {
   const [currAccount, setCurrAccount] = useState("");
   const [error, setError] = useState<ErrorMessage>(ErrorMessage.default);
   const [ideas, setIdeas] = useState<IdeaType[]>([]);
 
+  const [startIndex, setStartIndex] = useState(0);
+  const [maxPages] = useState(1);
+
+  const onloadMore = () => {
+    setStartIndex((p) => p + maxPages);
+  };
   const onFetch = async (address: string) => {
     try {
       if (!window.ethereum) {
@@ -34,20 +37,28 @@ export const useFetchidea = () => {
 
       const contract = new Contract(contractAddress, contractAbi, signer);
 
-      const ideas = await contract.getIdeasByAddress(
-        address,
-        startIndex,
-        maxPages
-      );
+      if (startIndex !== undefined && maxPages !== undefined) {
+        const ideas = await contract.getIdeasByAddress(
+          address,
+          startIndex,
+          maxPages
+        );
 
-      const formattedIdeas = ideas.map((transaction: never) => {
-        return {
-          title: transaction[0],
-          content: transaction[1],
-          timestamp: new Date(parseInt(transaction[2])).toLocaleString(),
-        };
-      });
-      setIdeas(formattedIdeas);
+        const formattedIdeas = ideas.map((transaction: never) => ({
+          id: transaction[0],
+          title: transaction[1],
+          content: transaction[2],
+          timestamp: new Date(parseInt(transaction[3])).toLocaleString(),
+        }));
+        console.log(ideas.length);
+
+        setIdeas((prevIdeas) => [
+          ...prevIdeas,
+          ...formattedIdeas.filter(
+            (newIdea: any) => !prevIdeas.some((idea) => idea.id === newIdea.id)
+          ),
+        ]);
+      }
     } catch (error: any) {
       if (error.message.includes("user rejected action")) {
         setError(ErrorMessage.AccessToMetamaskWasDenied);
@@ -58,7 +69,7 @@ export const useFetchidea = () => {
     }
   };
 
-  const checkWalletConnection = useCallback(async () => {
+  const checkWalletConnection = async () => {
     try {
       if (!window.ethereum) {
         setError(ErrorMessage.MetamaskNotInstalled);
@@ -87,18 +98,19 @@ export const useFetchidea = () => {
         setError(ErrorMessage.GeneralError);
       }
     }
-  }, []);
+  };
 
   const resetErrMessage = () => setError(ErrorMessage.default);
 
   useEffect(() => {
     checkWalletConnection();
-  }, [checkWalletConnection]);
+  }, [maxPages, startIndex]);
 
   return {
     error,
     currAccount,
     resetErrMessage,
     ideas,
+    onloadMore,
   };
 };

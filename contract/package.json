@@ -5,6 +5,7 @@
     "hardhat": "^2.19.4"
   },
   "dependencies": {
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "lorem-ipsum": "^2.0.8"
   }
 }

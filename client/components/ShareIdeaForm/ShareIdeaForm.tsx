@@ -5,6 +5,9 @@ import { Alert, AlertType } from "../Alert/Alert";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { useShareidea } from "@/hooks/useShareidea/useShareidea";
 import { CopyToClipboardButton } from "../CopyToClipboardButton/CopyToClipboardButton";
+import Link from "next/link";
+import { navigation } from "@/utils/constants/navigation";
+import { IoIosArrowRoundForward } from "react-icons/io";
 
 const ShareIdeaForm: React.FC = () => {
   const {
@@ -69,14 +72,25 @@ const ShareIdeaForm: React.FC = () => {
         />
       )}
       {txHash && (
-        <Alert
-          type={AlertType.Success}
-          isVisible
-          content={txHash}
-          onClose={resetTxHash}
-          icon={<CopyToClipboardButton content={txHash} />}
-          title="Success"
-        />
+        <>
+          <div className="w-full flex flex-col items-center">
+            <Alert
+              type={AlertType.Success}
+              isVisible
+              content={txHash}
+              onClose={resetTxHash}
+              icon={<CopyToClipboardButton content={txHash} />}
+              title="Success"
+            />
+
+            <Link href={navigation[1].href} className="mt-4 cursor-pointer">
+              <div className="flex items-center text-light-blue-700 hover:underline">
+                View your idea
+                <IoIosArrowRoundForward className="ml-1" />
+              </div>
+            </Link>
+          </div>
+        </>
       )}
       {/* <Checkbox
         label="Idea is private"
