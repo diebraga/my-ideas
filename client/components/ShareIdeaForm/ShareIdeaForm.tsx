@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@material-tailwind/react";
+import { Button, Spinner } from "@material-tailwind/react";
 import React from "react";
 import { Alert, AlertType } from "../Alert/Alert";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
@@ -20,7 +20,17 @@ const ShareIdeaForm: React.FC = () => {
     resetErrMessage,
     txHash,
     resetTxHash,
+    checkWalletConnection,
+    isPending,
   } = useShareidea();
+
+  if (isPending) {
+    return (
+      <div className="flex flex-col mt-16 p-4 items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <form
@@ -59,17 +69,29 @@ const ShareIdeaForm: React.FC = () => {
         {errors.idea && errors.idea.message}
       </div>
 
-      <Button type="submit" className="w-full" loading={isLoading}>
-        Share
-      </Button>
-      {error && (
-        <Alert
-          type={AlertType.Danger}
-          isVisible
-          content={error}
-          onClose={resetErrMessage}
-          icon={<AiOutlineExclamationCircle />}
-        />
+      {error ? (
+        <>
+          <Button
+            className="w-full"
+            onClick={() => {
+              checkWalletConnection(), resetErrMessage();
+            }}
+          >
+            Connect
+          </Button>
+
+          <Alert
+            type={AlertType.Danger}
+            isVisible
+            content={error}
+            onClose={resetErrMessage}
+            icon={<AiOutlineExclamationCircle />}
+          />
+        </>
+      ) : (
+        <Button type="submit" className="w-full" loading={isLoading}>
+          Share
+        </Button>
       )}
       {txHash && (
         <>

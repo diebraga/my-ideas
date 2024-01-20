@@ -131,5 +131,6 @@ export const useFetchidea = () => {
     isLoading,
     isDisabled: ideas.length >= ideaslength,
     checkWalletConnection,
+    setError,
   };
 };

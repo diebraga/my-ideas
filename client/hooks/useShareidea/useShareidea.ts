@@ -8,6 +8,7 @@ import { getMetamask } from "@/utils/getMetamask/getMetamask";
 import { Contract, ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useFetchidea } from "../useFetchIdea/useFetchIdea";
 
 type FormData = {
   title: string;
@@ -22,8 +23,14 @@ export const useShareidea = () => {
     reset,
     formState: { errors, isLoading, isSubmitting },
   } = useForm<FormData>();
-  const [currAccount, setCurrAccount] = useState("");
-  const [error, setError] = useState<ErrorMessage>(ErrorMessage.default);
+  const {
+    currAccount,
+    error,
+    setError,
+    resetErrMessage,
+    checkWalletConnection,
+    isLoading: isPending,
+  } = useFetchidea();
   const [txHash, setTxHash] = useState("");
 
   const onSubmit = async (data: FormData) => {
@@ -53,42 +60,7 @@ export const useShareidea = () => {
     }
   };
 
-  const checkWalletConnection = async () => {
-    try {
-      if (!window.ethereum) {
-        setError(ErrorMessage.MetamaskNotInstalled);
-        return;
-      }
-
-      const accounts = await window.ethereum.request({
-        method: "eth_accounts",
-      });
-
-      if (accounts) {
-        setCurrAccount(accounts[0]);
-        setError(ErrorMessage.default);
-      } else {
-        setError(ErrorMessage.NoAccoutFound);
-        console.log("No accounts found");
-      }
-    } catch (error: any) {
-      if (error.message.includes("could not coalesce error")) {
-        setError(ErrorMessage.PleaseAcceptMetamaskRequest);
-      } else if (error.message.includes("user rejected action")) {
-        setError(ErrorMessage.AccessToMetamaskWasDenied);
-      } else {
-        setError(ErrorMessage.GeneralError);
-      }
-    }
-  };
-
-  const resetErrMessage = () => setError(ErrorMessage.default);
-
   const resetTxHash = () => setTxHash("");
-
-  useEffect(() => {
-    checkWalletConnection();
-  }, []);
 
   return {
     register,
@@ -101,5 +73,7 @@ export const useShareidea = () => {
     resetErrMessage,
     txHash,
     resetTxHash,
+    checkWalletConnection,
+    isPending,
   };
 };
