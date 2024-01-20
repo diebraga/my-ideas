@@ -21,10 +21,11 @@ export const useFetchidea = () => {
   const [ideas, setIdeas] = useState<IdeaType[]>([]);
 
   const [startIndex, setStartIndex] = useState(0);
-  const [maxPages] = useState(1);
+  const [maxPages] = useState(10);
 
-  const [isLoading, setIsLoading]=useState(false)
-console.log(isLoading);
+  const [ideaslength, setIdeaslength] = useState(0);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const onloadMore = () => {
     setStartIndex((p) => p + maxPages);
@@ -35,13 +36,19 @@ console.log(isLoading);
         setError(ErrorMessage.MetamaskNotInstalled);
         return;
       }
+      setIsLoading(true);
 
       const { signer } = await getMetamask();
 
       const contract = new Contract(contractAddress, contractAbi, signer);
 
       if (startIndex !== undefined && maxPages !== undefined) {
-        setIsLoading(true)
+        const ideaslength = await contract.getIdeasByAddress(
+          address,
+          startIndex,
+          99999
+        );
+        setIdeaslength(ideaslength.length);
         const ideas = await contract.getIdeasByAddress(
           address,
           startIndex,
@@ -54,7 +61,6 @@ console.log(isLoading);
           content: transaction[2],
           timestamp: new Date(parseInt(transaction[3])).toLocaleString(),
         }));
-        console.log(ideas.length);
 
         setIdeas((prevIdeas) => [
           ...prevIdeas,
@@ -62,15 +68,16 @@ console.log(isLoading);
             (newIdea: any) => !prevIdeas.some((idea) => idea.id === newIdea.id)
           ),
         ]);
-        setIsLoading(false)
-
+        setIsLoading(false);
       }
     } catch (error: any) {
       if (error.message.includes("user rejected action")) {
         setError(ErrorMessage.AccessToMetamaskWasDenied);
+        setIsLoading(false);
       } else {
         setError(ErrorMessage.GeneralError);
         console.error("Transaction failed:", error);
+        setIsLoading(false);
       }
     }
   };
@@ -118,6 +125,7 @@ console.log(isLoading);
     resetErrMessage,
     ideas,
     onloadMore,
-    isLoading
+    isLoading,
+    isDisabled: ideas.length >= ideaslength,
   };
 };
