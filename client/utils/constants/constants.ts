@@ -10,4 +10,5 @@ export enum ErrorMessage {
   AccessToMetamaskWasDenied = "Access to metamask was denied",
   GeneralError = "An unespected error has ocurred",
   NoAccoutFound = "No account found",
+  PendingMetamaskAuthorization = "Pending metamask uthorization",
 }

@@ -74,6 +74,9 @@ export const useFetchidea = () => {
       if (error.message.includes("user rejected action")) {
         setError(ErrorMessage.AccessToMetamaskWasDenied);
         setIsLoading(false);
+      } else if (error.message.includes("eth_requestAccounts")) {
+        setError(ErrorMessage.PendingMetamaskAuthorization);
+        setIsLoading(false);
       } else {
         setError(ErrorMessage.GeneralError);
         console.error("Transaction failed:", error);
@@ -127,5 +130,6 @@ export const useFetchidea = () => {
     onloadMore,
     isLoading,
     isDisabled: ideas.length >= ideaslength,
+    checkWalletConnection,
   };
 };

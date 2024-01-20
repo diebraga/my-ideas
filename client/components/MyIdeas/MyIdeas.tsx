@@ -5,16 +5,57 @@ import { Button, Spinner } from "@material-tailwind/react";
 import Link from "next/link";
 import React from "react";
 import { VscEmptyWindow } from "react-icons/vsc";
+import { Alert, AlertType } from "../Alert/Alert";
+import { AiOutlineExclamationCircle } from "react-icons/ai";
 
 const MyIdeas: React.FC = () => {
-  const { ideas, onloadMore, isLoading, error, isDisabled } = useFetchidea();
+  const {
+    ideas,
+    onloadMore,
+    isLoading,
+    error,
+    isDisabled,
+    resetErrMessage,
+    checkWalletConnection,
+  } = useFetchidea();
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col mt-16 p-4 items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Alert
+          className="mt-14"
+          type={AlertType.Danger}
+          isVisible
+          content={error}
+          icon={<AiOutlineExclamationCircle />}
+        />
+        {isLoading && (
+          <div className="flex flex-col mt-16 p-4 items-center justify-center">
+            <Spinner />
+          </div>
+        )}
+        <Button
+          className="w-full mt-4"
+          onClick={() => {
+            checkWalletConnection(), resetErrMessage();
+          }}
+        >
+          Connect
+        </Button>
+      </>
+    );
+  }
   return (
     <div className="flex flex-col mt-16 p-4 items-center justify-center">
-      {isLoading ? (
-        // Show the loading spinner when isLoading is true
-        <Spinner />
-      ) : ideas.length > 0 ? (
+      {ideas.length > 0 ? (
         // Show the ideas list if there are any ideas and isLoading is false
         <>
           {ideas.map(({ id, title, content }) => (
@@ -44,8 +85,6 @@ const MyIdeas: React.FC = () => {
           </Link>
         </div>
       )}
-
-      {error && <p>Error: {error}</p>}
     </div>
   );
 };
