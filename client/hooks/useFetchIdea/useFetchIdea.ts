@@ -36,7 +36,6 @@ export const useFetchidea = () => {
         setError(ErrorMessage.MetamaskNotInstalled);
         return;
       }
-      setIsLoading(true);
 
       const { signer } = await getMetamask();
 
@@ -68,7 +67,6 @@ export const useFetchidea = () => {
             (newIdea: any) => !prevIdeas.some((idea) => idea.id === newIdea.id)
           ),
         ]);
-        setIsLoading(false);
       }
     } catch (error: any) {
       if (error.message.includes("user rejected action")) {
@@ -92,26 +90,29 @@ export const useFetchidea = () => {
         return;
       }
 
+      setIsLoading(true);
       const accounts = await window.ethereum.request({
-        method: "eth_accounts",
+        method: "eth_requestAccounts",
       });
 
-      if (accounts) {
+      if (accounts.length > 0) {
         setCurrAccount(accounts[0]);
         onFetch(accounts[0]);
-
         setError(ErrorMessage.default);
+        setIsLoading(false);
       } else {
         setError(ErrorMessage.NoAccoutFound);
-        console.log("No accounts found");
+        setIsLoading(false);
       }
     } catch (error: any) {
-      if (error.message.includes("could not coalesce error")) {
-        setError(ErrorMessage.PleaseAcceptMetamaskRequest);
-      } else if (error.message.includes("user rejected action")) {
+      setIsLoading(false);
+
+      if (error.code === 4001) {
+        // User rejected the request
         setError(ErrorMessage.AccessToMetamaskWasDenied);
       } else {
         setError(ErrorMessage.GeneralError);
+        console.error("An error occurred: ", error);
       }
     }
   };
@@ -120,7 +121,7 @@ export const useFetchidea = () => {
 
   useEffect(() => {
     checkWalletConnection();
-  }, [maxPages, startIndex]);
+  }, [maxPages, startIndex, window.ethereum]);
 
   return {
     error,
