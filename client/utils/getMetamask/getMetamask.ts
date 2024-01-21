@@ -1,8 +1,8 @@
-import { BrowserProvider, Eip1193Provider } from "ethers";
+import { BrowserProvider } from "ethers";
 
 declare global {
   interface Window {
-    ethereum: Eip1193Provider;
+    ethereum: any;
   }
 }
 

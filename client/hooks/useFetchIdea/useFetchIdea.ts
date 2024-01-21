@@ -121,7 +121,35 @@ export const useFetchidea = () => {
 
   useEffect(() => {
     checkWalletConnection();
-  }, [maxPages, startIndex, window.ethereum]);
+  }, [maxPages, startIndex]);
+
+  const handleAccountsChanged = (accounts: string[]) => {
+    if (accounts.length > 0) {
+      setCurrAccount(accounts[0]);
+      onFetch(accounts[0]);
+    } else {
+      setCurrAccount("");
+      setError(ErrorMessage.NoAccoutFound);
+      setIdeas([]);
+    }
+  };
+
+  useEffect(() => {
+    checkWalletConnection();
+
+    if (window.ethereum) {
+      window.ethereum.on("accountsChanged", handleAccountsChanged);
+    }
+
+    return () => {
+      if (window.ethereum) {
+        window.ethereum.removeListener(
+          "accountsChanged",
+          handleAccountsChanged
+        );
+      }
+    };
+  }, [startIndex, maxPages]);
 
   return {
     error,

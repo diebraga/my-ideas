@@ -11,4 +11,5 @@ export enum ErrorMessage {
   GeneralError = "An unespected error has ocurred",
   NoAccoutFound = "No account found",
   PendingMetamaskAuthorization = "Pending metamask uthorization",
+  MetamaskNotConnected = "Metamask not connected",
 }
